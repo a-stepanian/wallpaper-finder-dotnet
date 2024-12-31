@@ -1,0 +1,18 @@
+**/.env
+
+# Build Artifacts
+**/bin/
+**/obj/
+**/out/
+
+# IDE Files
+**/.vscode/
+
+# Environment Files
+**/appsettings.Development.json
+**/appsettings.Production.json
+
+**/node_modules/
+
+# Windows System Files
+**/Thumbs.db
