@@ -2,11 +2,21 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using Wallpaper.API.Models;
 
-var builder = WebApplication.CreateBuilder(args);
-
 DotNetEnv.Env.Load();
+var host = Environment.GetEnvironmentVariable("HOST");
 var apiKey = Environment.GetEnvironmentVariable("ACCESS_KEY");
-    
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins(host)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -14,6 +24,7 @@ builder.Services.AddSwaggerGen(c =>
 });
     
 var app = builder.Build();
+app.UseCors("AllowAngularApp");
     
 if (app.Environment.IsDevelopment())
 {
@@ -38,7 +49,6 @@ app.MapGet("/photos", async (int page = 1, int per_page = 10) =>
 
         // Read the response content as a string
         var responseContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseContent);
 
         // Deserialize the JSON response into a list of photos
         var photos = JsonSerializer.Deserialize<List<Photo>>(responseContent);
