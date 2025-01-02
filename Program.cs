@@ -35,12 +35,12 @@ if (app.Environment.IsDevelopment())
    });
 }
 
-app.MapGet("/photos", async (int page = 1, int per_page = 10) =>
+app.MapGet("/photos", async (int page = 1, int per_page = 10, string searchTerm = "junkyard") =>
 {
     var client = new HttpClient();
     try
     {
-        var response = await client.GetAsync($"https://api.unsplash.com/photos?page={page}&per_page={per_page}&client_id={apiKey}");
+        var response = await client.GetAsync($"https://api.unsplash.com/photos?query={searchTerm}&page={page}&per_page={per_page}&client_id={apiKey}");
         
         if (!response.IsSuccessStatusCode)
         {
